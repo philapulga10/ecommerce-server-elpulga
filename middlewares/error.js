@@ -1,4 +1,4 @@
-export const errorMiddleware = (err, req, res, next) => {
+export const errorMiddleware = (err, _, res) => {
   err.message = err.message || "Internal server error";
   err.status = err.status || 500;
 

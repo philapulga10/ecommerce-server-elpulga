@@ -1,7 +1,7 @@
 import { User } from "../models/user.js";
 import ErrorHandler from "../utils/error.js";
 
-export const login = async (_, res) => {
+export const login = async (req, res, next) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email }).select("+password");
