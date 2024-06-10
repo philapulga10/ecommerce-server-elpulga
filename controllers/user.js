@@ -22,10 +22,10 @@ export const login = async (_, res) => {
     .json({ success: true, message: `Welcome back, ${user.name}` });
 };
 
-export const signUp = async (_, res) => {
+export const signUp = async (req, res) => {
   const { name, email, password, address, city, country, pinCode } = req.body;
 
-  // add cloudinary here
+  // ADD CLOUDINARY HERE
 
   await User.create({ name, email, password, address, city, country, pinCode });
 
