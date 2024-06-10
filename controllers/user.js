@@ -1,4 +1,5 @@
 import { User } from "../models/user.js";
+import ErrorHandler from "../utils/error.js";
 
 export const login = async (_, res) => {
   const { email, password } = req.body;
@@ -12,9 +13,7 @@ export const login = async (_, res) => {
   const isMatched = await user.comparePassword(password);
 
   if (!isMatched) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Incorrect password" });
+    return next(new ErrorHandler("Incorrect password", 400));
   }
 
   res
