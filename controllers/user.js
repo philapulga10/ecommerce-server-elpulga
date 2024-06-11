@@ -1,7 +1,7 @@
 import { User } from "../models/user.js";
 import { asyncError } from "../middlewares/error.js";
 import ErrorHandler from "../utils/error.js";
-import { sendToken } from "../utils/features.js";
+import { cookieOptions, sendToken } from "../utils/features.js";
 
 export const login = asyncError(async (req, res, next) => {
   const { email, password } = req.body;
@@ -43,6 +43,19 @@ export const signUp = asyncError(async (req, res) => {
   });
 
   sendToken(user, res, "Registered successfully", 200);
+});
+
+export const logOut = asyncError(async (_, res) => {
+  res
+    .status(200)
+    .cookie("token", "", {
+      ...cookieOptions,
+      expires: new Date(Date.now()),
+    })
+    .json({
+      success: true,
+      message: "Logged out successfully",
+    });
 });
 
 export const getMyProfile = asyncError(async (req, res, next) => {
