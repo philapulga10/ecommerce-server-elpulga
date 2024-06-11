@@ -6,8 +6,6 @@ import { User } from "../models/user.js";
 export const isAuthenticated = async (req, _, next) => {
   const { token } = req.cookies;
 
-  console.log(token);
-
   if (!token) {
     return next(new ErrorHandler("Not logged in", 401));
   }
