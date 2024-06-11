@@ -1,7 +1,7 @@
-import { User } from "../models/user.js";
 import { asyncError } from "../middlewares/error.js";
 import ErrorHandler from "../utils/error.js";
 import { cookieOptions, sendToken } from "../utils/features.js";
+import { User } from "../models/user.js";
 
 export const login = asyncError(async (req, res, next) => {
   const { email, password } = req.body;
