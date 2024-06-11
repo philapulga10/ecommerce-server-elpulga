@@ -9,9 +9,11 @@ export const login = asyncError(async (req, res, next) => {
   const user = await User.findOne({ email }).select("+password");
 
   if (!user) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Incorrect email or password" });
+    return next(new ErrorHandler("Incorrect email or password", 400));
+  }
+
+  if (!password) {
+    return next(new ErrorHandler("Please enter password", 400));
   }
 
   const isMatched = await user.comparePassword(password);
@@ -64,5 +66,63 @@ export const getMyProfile = asyncError(async (req, res, next) => {
   res.status(200).json({
     success: true,
     user,
+  });
+});
+
+export const updateProfile = asyncError(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+  const { name, email, address, city, country, pinCode } = req.body;
+
+  if (name) {
+    user.name = name;
+  }
+  if (email) {
+    user.email = email;
+  }
+  if (address) {
+    user.address = address;
+  }
+  if (city) {
+    user.city = city;
+  }
+  if (country) {
+    user.country = country;
+  }
+  if (pinCode) {
+    user.pinCode = pinCode;
+  }
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Profile updated successfully",
+  });
+});
+
+export const changePassword = asyncError(async (req, res, next) => {
+  const user = await User.findById(req.user._id).select("+password");
+
+  const { oldPassword, newPassword } = req.body;
+
+  if (!oldPassword || !newPassword) {
+    return next(
+      new ErrorHandler("Please enter old password & new password", 400)
+    );
+  }
+
+  const isMatched = await user.comparePassword(oldPassword);
+
+  if (!isMatched) {
+    return next(new ErrorHandler("Incorrect old password"));
+  }
+
+  user.password = newPassword;
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Password changed successfully",
   });
 });
