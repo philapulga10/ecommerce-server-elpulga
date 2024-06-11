@@ -1,6 +1,7 @@
 import moongoose from "mongoose";
 import validator from "validator";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const userSchema = new moongoose.Schema({
   name: {
@@ -50,6 +51,12 @@ userSchema.pre("save", async function () {
 
 userSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
+};
+
+userSchema.methods.generateToken = function () {
+  return jwt.sign({ _id: this._id }, process.env.JWT_SECRET, {
+    expiresIn: "15d",
+  });
 };
 
 export const User = moongoose.model("User", userSchema);
