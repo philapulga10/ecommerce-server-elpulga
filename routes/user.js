@@ -26,6 +26,6 @@ router.put("/update-profile", isAuthenticated, updateProfile);
 
 router.put("/change-password", isAuthenticated, changePassword);
 
-router.put("/update-pic", isAuthenticated, updatePic);
+router.put("/update-pic", isAuthenticated, singleUpload, updatePic);
 
 export default router;
