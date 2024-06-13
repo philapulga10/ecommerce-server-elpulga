@@ -7,34 +7,43 @@ import {
   deleteCategory,
   deleteProduct,
   deleteProductImage,
+  getAdminProducts,
   getAllCategories,
   getAllProducts,
   getProductDetails,
   updateProduct,
 } from "../controllers/product.js";
-import { isAuthenticated } from "../middlewares/auth.js";
+import { isAdmin, isAuthenticated } from "../middlewares/auth.js";
 import { singleUpload } from "../middlewares/multer.js";
 
 const router = express.Router();
 
 router.get("/all", getAllProducts);
 
+router.get("/admin", isAuthenticated, isAdmin, getAdminProducts);
+
 router.get("/single/:id", getProductDetails);
 
-router.post("/new", isAuthenticated, singleUpload, createProduct);
+router.post("/new", isAuthenticated, isAdmin, singleUpload, createProduct);
 
-router.put("/single/:id", isAuthenticated, updateProduct);
+router.put("/single/:id", isAuthenticated, isAdmin, updateProduct);
 
-router.post("/images/:id", isAuthenticated, singleUpload, addProductImage);
+router.delete("/single/:id", isAuthenticated, isAdmin, deleteProduct);
 
-router.delete("/images/:id", isAuthenticated, deleteProductImage);
+router.post(
+  "/images/:id",
+  isAuthenticated,
+  isAdmin,
+  singleUpload,
+  addProductImage
+);
 
-router.delete("/single/:id", isAuthenticated, deleteProduct);
+router.delete("/images/:id", isAuthenticated, isAdmin, deleteProductImage);
 
-router.post("/category", isAuthenticated, addCategory);
+router.post("/category", isAuthenticated, isAdmin, addCategory);
 
 router.get("/categories", getAllCategories);
 
-router.delete("/category/:id", isAuthenticated, deleteCategory);
+router.delete("/category/:id", isAuthenticated, isAdmin, deleteCategory);
 
 export default router;
