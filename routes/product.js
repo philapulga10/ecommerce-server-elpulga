@@ -1,10 +1,13 @@
 import express from "express";
 
 import {
+  addCategory,
   addProductImage,
   createProduct,
+  deleteCategory,
   deleteProduct,
   deleteProductImage,
+  getAllCategories,
   getAllProducts,
   getProductDetails,
   updateProduct,
@@ -27,5 +30,11 @@ router.post("/images/:id", isAuthenticated, singleUpload, addProductImage);
 router.delete("/images/:id", isAuthenticated, deleteProductImage);
 
 router.delete("/single/:id", isAuthenticated, deleteProduct);
+
+router.post("/category", isAuthenticated, addCategory);
+
+router.get("/categories", getAllCategories);
+
+router.delete("/category/:id", isAuthenticated, deleteCategory);
 
 export default router;
