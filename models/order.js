@@ -68,7 +68,7 @@ const orderSchema = new moongoose.Schema({
     type: Number,
     required: true,
   },
-  shippingPrice: {
+  shippingCharges: {
     type: Number,
     required: true,
   },

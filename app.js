@@ -6,6 +6,7 @@ import { errorMiddleware } from "./middlewares/error.js";
 import connectDB from "./config/db.js";
 import user from "./routes/user.js";
 import product from "./routes/product.js";
+import order from "./routes/order.js";
 
 config({
   path: "./data/config.env",
@@ -20,5 +21,6 @@ app.use(cookieParser());
 
 app.use("/api/v1/user", user);
 app.use("/api/v1/product", product);
+app.use("/api/v1/order", order);
 
 app.use(errorMiddleware);
