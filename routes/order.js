@@ -7,11 +7,13 @@ import {
   getMyOrders,
   getOrderDetails,
   processOrder,
+  processPayment,
 } from "../controllers/order.js";
 
 const router = express.Router();
 
 router.post("/new", isAuthenticated, createOrder);
+router.post("/payment", isAuthenticated, processPayment);
 router.get("/my", isAuthenticated, getMyOrders);
 router.get("/admin", isAuthenticated, getAdminOrders);
 router.get("/single/:id", isAuthenticated, getOrderDetails);
