@@ -163,3 +163,38 @@ export const updatePic = asyncError(async (req, res, next) => {
     message: "Avatar update successfully",
   });
 });
+
+export const forgetPassword = asyncError(async (req, res, next) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return next(new ErrorHandler("Incorrect email", 404));
+  }
+
+  // max, min 2000, 10000
+  // math.random() * (max - min) + min
+
+  const randomNumber = Math.random() * (999999 - 100000) + 10000;
+  const otp = Math.floor(randomNumber);
+  const otpExpire = 15 * 60 * 1000;
+
+  user.otp = otp;
+  user.otpExpire = new Date(Date.now() + otpExpire);
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: `Email sent to your email ${user.email}`,
+  });
+});
+
+export const resetPassword = asyncError(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});

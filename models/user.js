@@ -42,7 +42,7 @@ const userSchema = new moongoose.Schema({
     url: String,
   },
   otp: Number,
-  otp_expire: Date,
+  otpExpire: Date,
 });
 
 userSchema.pre("save", async function (next) {
