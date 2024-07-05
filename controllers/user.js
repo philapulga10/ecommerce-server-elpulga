@@ -4,6 +4,7 @@ import { asyncError } from "../middlewares/error.js";
 import ErrorHandler from "../utils/error.js";
 import { cookieOptions, getDataUri, sendToken } from "../utils/features.js";
 import { User } from "../models/user.js";
+import { sendEmail } from "../utils/features.js";
 
 export const login = asyncError(async (req, res, next) => {
   const { email, password } = req.body;
@@ -85,8 +86,9 @@ export const getMyProfile = asyncError(async (req, res, next) => {
 });
 
 export const updateProfile = asyncError(async (req, res, next) => {
-  const user = await User.findById(req.user._id);
   const { name, email, address, city, country, pinCode } = req.body;
+
+  const user = await User.findById(req.user._id);
 
   if (name) {
     user.name = name;
@@ -165,6 +167,8 @@ export const updatePic = asyncError(async (req, res, next) => {
 });
 
 export const forgetPassword = asyncError(async (req, res, next) => {
+  console.log("Forget password");
+
   const { email } = req.body;
   const user = await User.findOne({ email });
 
@@ -183,6 +187,19 @@ export const forgetPassword = asyncError(async (req, res, next) => {
   user.otpExpire = new Date(Date.now() + otpExpire);
 
   await user.save();
+
+  const message = `Your OTP reseting password is ${otp}. \n Please ignore if you haven't requested this.`;
+
+  try {
+    await sendEmail("OTP for reseting password", user.email, message);
+  } catch (error) {
+    user.otp = null;
+    user.otpExpire = null;
+
+    await user.save();
+
+    return next(error);
+  }
 
   res.status(200).json({
     success: true,
